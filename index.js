@@ -2,22 +2,38 @@ const chatForm = get('form');
 const chatInput = get('input');
 const chatBox = get('main');
 
-appendMessage('bot', 'This is a bot bubble');
-appendMessage('user', 'This is a user bubble');
+// Store user prompt history
+let history = [];
+
+appendMessage('bot', 'Hi, I am a chatbot here to help you with your medical questions. What seems to be the problem?');
 
 chatForm.addEventListener('submit', event => {
   event.preventDefault();
-  const text = chatInput.value;
+  var text = chatInput.value;
   if (!text) return;
   
   appendMessage('user', text);
   chatInput.value = '';
+
+  // Strategy 1 (see below all codes for details)
+  if(text.includes("?")){
+    console.log(history.join(" "));
+    text =  history.join(" ") + " " + text;
+    console.log(text)
+    history = [];
+  } else {
+    history.push(text);
+  }
+
   data = {
     "inputs": `${text}`,
     "parameters": {}
   }
+
+  // Get bot response
   response = query(data).then((response) => {
     console.log(response);
+    // Add response to chat
     appendMessage('bot', response[0].generated_text);
   });
 });
@@ -57,9 +73,7 @@ async function query(data) {
 	return result;
 }
 
-// query({
-//     "inputs": "What is my name?",
-//     "parameters": {}
-// }).then((response) => {
-// 	console.log(JSON.stringify(response));
-// });
+// Strategy 1: 
+// Idea: concatenate user messages until a message with a question mark is sent. Then, send the concatenated messages to the bot and clear the concatenated messages.
+
+// Bot still responds to each message but question mark messages are concatenated with previous non question mark questions.
