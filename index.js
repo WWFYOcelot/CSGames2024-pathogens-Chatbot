@@ -12,6 +12,14 @@ chatForm.addEventListener('submit', event => {
   
   appendMessage('user', text);
   chatInput.value = '';
+  data = {
+    "inputs": `${text}`,
+    "parameters": {}
+  }
+  response = query(data).then((response) => {
+    console.log(response);
+    appendMessage('bot', response[0].generated_text);
+  });
 });
 
 function appendMessage(side, text) {
@@ -23,7 +31,35 @@ function appendMessage(side, text) {
   chatBox.scrollTop += 500;
 }
 
+
+
 // Utils
 function get(selector, root = document) {
   return root.querySelector(selector);
 }
+
+
+// Bot Section
+
+async function query(data) {
+	const response = await fetch(
+		"https://xevhza5rhd1jhkq8.us-east-1.aws.endpoints.huggingface.cloud",
+		{
+			headers: { 
+				"Accept" : "application/json",
+				"Content-Type": "application/json" 
+			},
+			method: "POST",
+			body: JSON.stringify(data),
+		}
+	);
+	const result = await response.json();
+	return result;
+}
+
+// query({
+//     "inputs": "What is my name?",
+//     "parameters": {}
+// }).then((response) => {
+// 	console.log(JSON.stringify(response));
+// });
