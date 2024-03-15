@@ -18,12 +18,18 @@ chatForm.addEventListener('submit', event => {
   // Strategy 1 (see below all codes for details)
   if(text.includes("?")){
     console.log(history.join(" "));
+    parsed_text = text.split(".");
+    parsed_text.forEach((sentence) => {
+      if(!sentence.includes("?")){
+        history.push(sentence + ".");
+      }
+    })
     text =  history.join(" ") + " " + text;
-    console.log(text)
-    history = [];
   } else {
     history.push(text);
   }
+
+  console.log(history);
 
   data = {
     "inputs": `${text}`,
