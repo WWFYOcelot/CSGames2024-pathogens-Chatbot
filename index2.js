@@ -3,7 +3,7 @@ const chatInput = get('input');
 const chatBox = get('main');
 
 // Store user prompt history
-let history = [];
+let contextHistory = [];
 
 appendMessage('bot', 'Hi, I am a chatbot here to help you with your medical questions. What seems to be the problem?');
 
@@ -14,26 +14,6 @@ chatForm.addEventListener('submit', event => {
   
   appendMessage('user', text);
   chatInput.value = '';
-
-  // Strategy 1 (see below all codes for details)
-  if(text.includes("?")){
-    console.log(history.join(" "));
-    parsed_text = text.split(".");
-    parsed_text.forEach((sentence) => {
-      if(!sentence.includes("?")){
-        history.push(sentence + ".");
-      }
-    })
-    text =  history.join(" ") + " " + text;
-  } else {
-    history.push(text);
-    if(history.length > 3){
-      history.shift(history.length - 3);
-    }
-  }
-
-  console.log(history);
-
   data = {
     "inputs": `${text}`,
     "parameters": {}
@@ -44,7 +24,16 @@ chatForm.addEventListener('submit', event => {
     console.log(response);
     // Add response to chat
     appendMessage('bot', response[0].generated_text);
+
+    // Store context history if response with context before Answer:
+    parsed_response = response[0].generated_text;
+    let context = parsed_response.substr(0, (parsed_response.indexOf("Answer:")))
+    context = context.substr(0, (context.lastIndexOf(".") + 1))
+    contextHistory.push(context);
   });
+
+  
+  
 });
 
 function appendMessage(side, text) {
@@ -81,8 +70,3 @@ async function query(data) {
 	const result = await response.json();
 	return result;
 }
-
-// Strategy 1: 
-// Idea: concatenate user messages until a message with a question mark is sent. Then, send the concatenated messages to the bot and clear the concatenated messages.
-
-// Bot still responds to each message but question mark messages are concatenated with previous non question mark questions.
