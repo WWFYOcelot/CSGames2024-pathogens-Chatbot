@@ -3,7 +3,7 @@ const chatInput = get('input');
 const chatBox = get('main');
 
 // Store user prompt history
-let history = [];
+let responses = [];
 
 appendMessage('bot', 'Hi, I am a chatbot here to help you with your medical questions. What seems to be the problem?');
 
@@ -12,40 +12,36 @@ chatForm.addEventListener('submit', event => {
   var text = chatInput.value;
   if (!text) return;
   
+  
   appendMessage('user', text);
   chatInput.value = '';
 
-  // Strategy 1 (see below all codes for details)
-  if(text.includes("?")){
-    console.log(history.join(" "));
-    parsed_text = text.split(".");
-    parsed_text.forEach((sentence) => {
-      if(!sentence.includes("?")){
-        history.push(sentence + ".");
-      }
-    })
-    text =  history.join(" ") + " " + text;
-  } else {
-    history.push(text);
-    if(history.length > 3){
-      history.shift(history.length - 3);
+  if(responses.length == 0){
+    
+    appendMessage('bot', 'What are your symptoms?');
+  }
+
+  if(responses.length < 1){
+    responses.push(text);
+  } else{
+    response1 = responses[0];
+    data = {
+      "inputs": `${response1 + " Here are my symptoms: " + text + " What do these symptoms indicate?"}`,
+      "parameters": {}
     }
+     // Get bot response
+    response = query(data).then((response) => {
+      console.log(response);
+      // Add response to chat
+      appendMessage('bot', response[0].generated_text);
+      responses = [];
+    });
+
+
   }
+ 
 
-  console.log(history);
-
-  data = {
-    "inputs": `${text}`,
-    "parameters": {}
-  }
-
-  // Get bot response
-  response = query(data).then((response) => {
-    console.log(response);
-    // Add response to chat
-    appendMessage('bot', response[0].generated_text);
   });
-});
 
 function appendMessage(side, text) {
   const bubble = `
@@ -82,7 +78,3 @@ async function query(data) {
 	return result;
 }
 
-// Strategy 1: 
-// Idea: concatenate user messages until a message with a question mark is sent. Then, send the concatenated messages to the bot and clear the concatenated messages.
-
-// Bot still responds to each message but question mark messages are concatenated with previous non question mark questions.
