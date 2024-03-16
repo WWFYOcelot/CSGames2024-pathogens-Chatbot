@@ -26,7 +26,7 @@ chatForm.addEventListener('submit', event => {
   } else{
     response1 = responses[0];
     data = {
-      "inputs": `${response1 + " Here are my symptoms: " + text + " What do these symptoms indicate?"}`,
+      "inputs": `${response1 + " Here are my symptoms: " + text + " What do these symptoms indicate? Should I see a doctor?"}`,
       "parameters": {}
     }
      // Get bot response
