@@ -17,3 +17,6 @@ medalpaca-7b
 https://huggingface.co/medalpaca/medalpaca-7b/blob/main/README.md 
 
 Contributors: Raymond Zeng, Faraan Rashid.
+
+How to run:
+Double click index.html.

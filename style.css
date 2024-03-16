@@ -40,8 +40,8 @@ header {
   justify-content: space-between;
   padding: 10px;
   border-bottom: var(--border);
-  background: #eee;
-  color: #666;
+  background: rgba(194, 192, 176, 1);;
+  color: rgba(67, 94, 61, 1);
 }
 
 main {
