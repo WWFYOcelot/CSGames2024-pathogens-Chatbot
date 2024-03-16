@@ -14,5 +14,6 @@ Format:
 
 Model API used for querying responses: 
 medalpaca-7b
+https://huggingface.co/medalpaca/medalpaca-7b/blob/main/README.md 
 
 Contributors: Raymond Zeng, Faraan Rashid.
