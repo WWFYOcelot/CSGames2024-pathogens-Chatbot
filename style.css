@@ -74,8 +74,8 @@ main {
   flex-direction: row-reverse;
 }
 .-user .bubble {
-  background: #579ffb;
-  color: #fff;
+  background: #CCD979ff;
+  color: black;
   border-bottom-right-radius: 0;
 }
 
